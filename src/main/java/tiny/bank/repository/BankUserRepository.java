@@ -2,8 +2,8 @@ package tiny.bank.repository;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
-import tiny.bank.model.Account;
+import tiny.bank.model.BankUser;
 
 @ApplicationScoped
-public class AccountRepository implements PanacheRepository<Account> {
+public class BankUserRepository implements PanacheRepository<BankUser> {
 }

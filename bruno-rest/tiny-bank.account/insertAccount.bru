@@ -1,0 +1,19 @@
+meta {
+  name: insertAccount
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/account/insert
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "accountNumber": "1",
+    "balance": "200",
+    "unitBalance": "$"
+  }
+}

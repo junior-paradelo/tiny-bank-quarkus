@@ -1,30 +1,40 @@
 package tiny.bank.resource;
 
-import java.util.List;
-
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import tiny.bank.model.Account;
 import tiny.bank.repository.AccountRepository;
+
+import java.util.List;
 
 @Path("/account")
 public class AccountResource {
 
-	@Inject
-	private AccountRepository accountRepository;
-	
-	@GET
-	public List<Account> index() {
-		return accountRepository.listAll();
-	}
-	
-	@POST
-	@Transactional
-	public Account insert(Account insertedAccount) {
-		accountRepository.persist(insertedAccount);
-		return insertedAccount;
-	}
+    @Inject
+    private AccountRepository accountRepository;
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/list")
+    public List<Account> getAccounts() {
+        return accountRepository.listAll();
+    }
+
+    @GET
+    @Path("/count")
+    public Long countAccounts() {
+        return accountRepository.count();
+    }
+
+    @POST
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/insert")
+    public Account insertAccount(Account insertedAccount) {
+        accountRepository.persist(insertedAccount);
+        return insertedAccount;
+    }
 }
