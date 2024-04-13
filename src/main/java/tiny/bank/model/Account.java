@@ -1,21 +1,27 @@
 package tiny.bank.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
-public class Account {
+public class Account implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue
     private Long id;
     private String accountNumber;
     private Double balance;
     private char unitBalance;
+    @ManyToOne
+    @JoinColumn(name = "id", nullable = false)
+    private BankUser bankUser;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
@@ -53,6 +59,14 @@ public class Account {
         this.unitBalance = unitBalance;
     }
 
+    public BankUser getBankUser() {
+        return bankUser;
+    }
+
+    public void setBankUser(BankUser bankUser) {
+        this.bankUser = bankUser;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -67,6 +81,19 @@ public class Account {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return unitBalance == account.unitBalance && Objects.equals(id, account.id) && Objects.equals(accountNumber, account.accountNumber) && Objects.equals(balance, account.balance) && Objects.equals(bankUser, account.bankUser) && Objects.equals(createdAt, account.createdAt) && Objects.equals(updatedAt, account.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, accountNumber, balance, unitBalance, bankUser, createdAt, updatedAt);
     }
 
     @Override
