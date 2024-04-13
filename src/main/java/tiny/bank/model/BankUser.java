@@ -1,31 +1,32 @@
 package tiny.bank.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
+@Table(name = "USER")
 public class BankUser implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue
+    @Column(unique = true, nullable = false)
     private Long id;
+    @Column(nullable = false)
     private String email;
     private String username;
     private String name;
     private String firstname;
-    @OneToMany(mappedBy = "bankUser")
-    private List<Account> accounts;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "USER_ID")
+    private Set<Account> accounts;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
@@ -71,11 +72,11 @@ public class BankUser implements Serializable {
         this.firstname = firstname;
     }
 
-    public List<Account> getAccounts() {
+    public Set<Account> getAccounts() {
         return accounts;
     }
 
-    public void setAccounts(List<Account> accounts) {
+    public void setAccounts(Set<Account> accounts) {
         this.accounts = accounts;
     }
 
@@ -115,7 +116,8 @@ public class BankUser implements Serializable {
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", name='" + name + '\'' +
-                ", firstName='" + firstname + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", accounts=" + accounts +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';

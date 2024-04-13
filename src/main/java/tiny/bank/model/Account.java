@@ -10,18 +10,18 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
+@Table(name = "ACCOUNT")
 public class Account implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue
+    @Column(unique = true, nullable = false)
     private Long id;
+    @Column(unique = true, nullable = false)
     private String accountNumber;
     private Double balance;
     private char unitBalance;
-    @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
-    private BankUser bankUser;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
@@ -59,14 +59,6 @@ public class Account implements Serializable {
         this.unitBalance = unitBalance;
     }
 
-    public BankUser getBankUser() {
-        return bankUser;
-    }
-
-    public void setBankUser(BankUser bankUser) {
-        this.bankUser = bankUser;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -88,12 +80,12 @@ public class Account implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        return unitBalance == account.unitBalance && Objects.equals(id, account.id) && Objects.equals(accountNumber, account.accountNumber) && Objects.equals(balance, account.balance) && Objects.equals(bankUser, account.bankUser) && Objects.equals(createdAt, account.createdAt) && Objects.equals(updatedAt, account.updatedAt);
+        return unitBalance == account.unitBalance && Objects.equals(id, account.id) && Objects.equals(accountNumber, account.accountNumber) && Objects.equals(balance, account.balance) && Objects.equals(createdAt, account.createdAt) && Objects.equals(updatedAt, account.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, accountNumber, balance, unitBalance, bankUser, createdAt, updatedAt);
+        return Objects.hash(id, accountNumber, balance, unitBalance, createdAt, updatedAt);
     }
 
     @Override
