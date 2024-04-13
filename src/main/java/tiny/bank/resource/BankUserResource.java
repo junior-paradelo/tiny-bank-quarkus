@@ -8,6 +8,8 @@ import jakarta.ws.rs.core.Response;
 import tiny.bank.model.BankUser;
 import tiny.bank.repository.BankUserRepository;
 
+import java.net.URI;
+
 @Path("/user")
 public class BankUserResource {
 
@@ -24,7 +26,7 @@ public class BankUserResource {
     @GET
     @Path("/get/{id}")
     public Response getUser(@PathParam("id") Long userId) {
-        return Response.ok(bankUserRepository.findById(userId)).build();
+        return bankUserRepository.findByIdOptional(userId).map(user -> Response.ok(user).build()).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
     @GET
@@ -41,7 +43,10 @@ public class BankUserResource {
     @Path("/insert")
     public Response insertUser(BankUser insertedUser) {
         bankUserRepository.persist(insertedUser);
-        return Response.ok(insertedUser).build();
+        if (bankUserRepository.isPersistent(insertedUser)) {
+            return Response.created(URI.create("/user/" + insertedUser.getId())).build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @DELETE
