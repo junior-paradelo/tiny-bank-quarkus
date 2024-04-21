@@ -56,4 +56,22 @@ public class AccountResource {
         boolean result = accountRepository.deleteById(accountId);
         return result ? Response.noContent().build() : Response.status(Response.Status.BAD_REQUEST).build();
     }
+
+    @PUT
+    @Transactional
+    @Path("/add-balance/{id}")
+    public Response addBalance(@PathParam("id") Long accountId, @QueryParam("balance") Double balance) {
+        Account account = accountRepository.findById(accountId);
+        account.setBalance(account.getBalance() + balance);
+        return Response.ok().build();
+    }
+
+    @PUT
+    @Transactional
+    @Path("/subtract-balance/{id}")
+    public Response subtractBalance(@PathParam("id") Long accountId, @QueryParam("balance") Double balance) {
+        Account account = accountRepository.findById(accountId);
+        account.setBalance(account.getBalance() - balance);
+        return Response.ok().build();
+    }
 }
